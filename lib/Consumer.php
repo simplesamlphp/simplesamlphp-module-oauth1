@@ -91,16 +91,19 @@ class Consumer
             $statuscode = 'unknown';
 
             /** @psalm-suppress UndefinedVariable */
-            if (preg_match('/^HTTP.*\s([0-9]{3})/', $http_response_header[0], $matches)) {
-                $statuscode = $matches[1];
-            }
+            if (!empty($http_response_header)) {
+                /** @psalm-suppress UndefinedVariable */
+                if (preg_match('/^HTTP.*\s([0-9]{3})/', $http_response_header[0], $matches)) {
+                    $statuscode = $matches[1];
+                }
 
-            $error = $context . ' [statuscode: ' . $statuscode . ']: ';
-            /** @psalm-suppress UndefinedVariable */
-            $oautherror = self::getOAuthError($http_response_header);
+                $error = $context . ' [statuscode: ' . $statuscode . ']: ';
+                /** @psalm-suppress UndefinedVariable */
+                $oautherror = self::getOAuthError($http_response_header);
 
-            if (!empty($oautherror)) {
-                $error .= $oautherror;
+                if (!empty($oautherror)) {
+                    $error .= $oautherror;
+                }
             }
 
             throw new \Exception($error . ':' . $url);
